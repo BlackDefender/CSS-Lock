@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS-Lock</title>
+    <link href="images/favicon.ico" rel="icon"          type="image/x-icon"/>
+    <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
+    <link rel="stylesheet" href="css/bundle.css">
+</head>
+<body>
+    <main>
+        <fieldset class="css-lock">
+            <legend>CSS-Lock</legend>
+
+			<div class="title">Output type</div>
+			<label><input id="css-lock--output-type-less" type="radio" name="output-type" value="less" checked> LESS</label><br>
+			<label><input id="css-lock--output-type-scss" type="radio" name="output-type" value="scss"> SCSS</label><br>
+			<label><input id="css-lock--output-type-equation" type="radio" name="output-type" value="equation"> Equation only</label><br><br>
+            <div class="title">All dimensions in px</div>
+            <table>
+                <tr>
+                    <td>
+                        <label><span class="val">max val</span><input id="css-lock--max-val" class="css-lock--input" type="text"></label>
+                    </td>
+                    <td>
+                        <label><span class="val">min val</span><input id="css-lock--min-val" class="css-lock--input" type="text"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label><span class="width">max width</span><input id="css-lock--max-width" min="0" class="css-lock--input" type="text"></label>
+                    </td>
+                    <td>
+                        <label><span class="width">min width</span><input id="css-lock--min-width" min="0" class="css-lock--input" type="text"></label>
+                    </td>
+                </tr>
+            </table>
+            <div id="css-lock--output">&nbsp;</div>
+            <div class="semi-bold">Result will be copied to the clipboard.</div>
+            <button class="calculate-btn" id="css-lock--calculate">Calculate</button>
+        </fieldset>
+    </main>
+    <script type="text/javascript" src="js/bundle.js"></script>
+</body>
+</html>
