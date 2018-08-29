@@ -1,8 +1,44 @@
 function cssLockInit() {
 
-    var data;
+    const _parseInt = (val) => {
+        val = parseInt(val);
+        return isNaN(val) ? 0 : val;
+    };
 
-    var dom = {
+    const nl2br = (str) => {
+        return str.replace(/([^>])\n/g, '$1<br/>');
+    };
+
+    const clearInput = (str) => {
+        return str.split(' ')
+                  .filter((item) => {return item !== '';})
+                  .map((item)=>{return _parseInt(item);})
+                  .join(' ');
+    };
+
+    const isMathExpression = (str) => {
+        return ['+', '-', '*', '/'].some((sign) => {return str.includes(sign);});
+    };
+
+    const makeString = (fromVal, toVal, fromWidth, toWidth) => {
+		if(fromVal === toVal){
+		    return fromVal+((fromVal > 0) ? 'px' : '');
+        }
+        let result = '('+fromVal+'px + ('+fromVal+' - '+toVal+') * (100vw - '+fromWidth+'px) / ('+fromWidth+' - '+toWidth+'))';
+        switch (data.outputType){
+            case 'less':
+                result = '~"calc' + result + '"';
+                break;
+            case 'scss':
+                result = 'calc' + result;
+                break;
+        }
+        return result;
+    };
+
+    let data;
+
+    let dom = {
         minVal: document.getElementById('css-lock--min-val'),
         maxVal: document.getElementById('css-lock--max-val'),
         minWidth: document.getElementById('css-lock--min-width'),
@@ -11,7 +47,7 @@ function cssLockInit() {
         calculateBtn: document.getElementById('css-lock--calculate')
     };
 
-    function getDefaultData() {
+    const getDefaultData = () => {
         return {
             dataStructureVersion: 2,
             outputType: 'less',
@@ -21,10 +57,11 @@ function cssLockInit() {
             maxWidth: 0,
             output: ''
         };
-    }
+    };
 
-    (function load() {
-        var dataStr = localStorage.getItem('cssLock');
+    // load
+    (() => {
+        let dataStr = localStorage.getItem('cssLock');
         if(dataStr){
             try{
                 data = JSON.parse(dataStr);
@@ -43,51 +80,60 @@ function cssLockInit() {
         dom.maxVal.value = data.maxVal;
         dom.minWidth.value = data.minWidth;
         dom.maxWidth.value = data.maxWidth;
-        dom.output.textContent = data.output;
+        dom.output.innerHTML = nl2br(data.output);
     })();
 
-    function save() {
+    // save
+    window.addEventListener('unload', () => {
         localStorage.setItem('cssLock', JSON.stringify(data));
-    }
-    window.addEventListener('unload', save);
+    });
 
-    function make() {
+
+
+    const make = () => {
         data.outputType = document.querySelector('input[name="output-type"]:checked').value;
         data.minVal = dom.minVal.value;
         data.maxVal = dom.maxVal.value;
         data.minWidth = dom.minWidth.value;
         data.maxWidth = dom.maxWidth.value;
-        data.output = '('+data.maxVal+'px + ('+data.maxVal+' - '+data.minVal+') * (100vw - '+data.maxWidth+'px) / ('+data.maxWidth+' - '+data.minWidth+'))';
-        switch (data.outputType){
-            case 'less':
-                data.output = '~"calc' + data.output + '"';
-                break;
-            case 'scss':
-                data.output = 'calc' + data.output;
-                break;
-        }
-    }
 
-    Array.prototype.forEach.call(document.querySelectorAll('.css-lock--input'), function (item) {
+        if(data.minVal === '' || data.maxVal === '') return;
+
+        let fromVals = data.maxVal.split(' '),
+            toVals = data.minVal.split(' ');
+
+        data.output = '';
+        for(let i=0; i<fromVals.length; ++i){
+            if(toVals[i] !== undefined){
+                if(i > 0) data.output += '\n';
+                data.output += makeString(parseInt(fromVals[i]), parseInt(toVals[i]), data.maxWidth, data.minWidth);
+            }
+        }
+    };
+
+    Array.prototype.forEach.call(document.querySelectorAll('.css-lock--input'), (item) => {
         item.addEventListener('input', function (e) {
-            dom.calculateBtn.click();
-            e.target.focus();
+            if(!isMathExpression(this.value) && this.value[this.value.length - 1] !== ' '){
+                this.value = clearInput(this.value);
+                dom.calculateBtn.click();
+                e.target.focus();
+            }
         });
         item.addEventListener('click', function () {
             this.select();
         });
         item.addEventListener('keydown', function (e) {
-            var reCalculate = false;
+            let reCalculate = false;
             switch (e.keyCode){
                 case 13: //press Enter
                     this.value = eval(this.value);
                     reCalculate = true;
                     break;
-                case 38: // +1
+                case 38: // arrow up
                     this.value = parseInt(this.value)+1;
                     reCalculate = true;
                     break;
-                case 40:
+                case 40:// arrow down
                     this.value = parseInt(this.value)-1;
                     reCalculate = true;
                     break;
@@ -102,22 +148,20 @@ function cssLockInit() {
             }
         });
     });
-    Array.prototype.forEach.call(document.querySelectorAll('input[name="output-type"]'), function (item) {
-        item.addEventListener('click', function () {
+    Array.prototype.forEach.call(document.querySelectorAll('input[name="output-type"]'), (item) => {
+        item.addEventListener('click', () => {
             dom.calculateBtn.click();
         });
     });
 
     new Clipboard('#css-lock--calculate', {
-        text: function(trigger) {
+        text: () => {
             make();
-            dom.output.textContent = data.output;
+            dom.output.innerHTML = nl2br(data.output);
             return data.output;
         }
     });
 }
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    cssLockInit();
-});
+document.addEventListener("DOMContentLoaded", cssLockInit);

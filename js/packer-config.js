@@ -10,6 +10,6 @@ exports.config = {
     wrapIntoContentLoadedEvent: false,
     watcher: {
         path: './sources',
-        delay: 100
+        delay: 200
     }
 };
