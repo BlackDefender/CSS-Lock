@@ -8,4 +8,5 @@ ru: https://habrahabr.ru/company/mailru/blog/315196/
 
 ### Features:
 - arrows up and down changes value
-- press enter to calculate
+- recalculate on values changes
+- result automatically copies to clipboard
