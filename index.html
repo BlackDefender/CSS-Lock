@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CSS-Lock</title>
+    <title>Tools</title>
     <link href="images/favicon.ico" rel="icon"          type="image/x-icon"/>
     <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
     <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet">
     <link rel="stylesheet" href="css/bundle.css">
 </head>
 <body>
@@ -14,10 +15,23 @@
         <fieldset class="css-lock">
             <legend>CSS-Lock</legend>
 
-			<div class="title">Output type</div>
-			<label><input id="css-lock--output-type-less" type="radio" name="output-type" value="less" checked> LESS</label><br>
-			<label><input id="css-lock--output-type-scss" type="radio" name="output-type" value="scss"> SCSS/CSS</label><br>
-			<label><input id="css-lock--output-type-equation" type="radio" name="output-type" value="equation"> Equation only</label><br><br>
+            <table class="radio-blocks">
+                <tr>
+                    <td>
+                        <div class="title">Output type:</div>
+                        <label><input id="css-lock--output-type-less" type="radio" name="output-type" value="less" checked> LESS</label><br>
+                        <label><input id="css-lock--output-type-scss" type="radio" name="output-type" value="scss"> SCSS/CSS</label><br>
+                        <label><input id="css-lock--output-type-equation" type="radio" name="output-type" value="equation"> Equation only</label><br><br>
+                    </td>
+                    <td>
+                        <div class="title">Anchor:</div>
+                        <label><input id="css-lock--anchor-type-vw" type="radio" name="anchor-type" value="vw" checked> width</label><br>
+                        <label><input id="css-lock--anchor-type-vh" type="radio" name="anchor-type" value="vh"> height</label>
+                    </td>
+                </tr>
+            </table>
+
+
             <div class="title">All dimensions in px</div>
             <table>
                 <tr>
@@ -38,10 +52,26 @@
                 </tr>
             </table>
             <div id="css-lock--output">&nbsp;</div>
-            <div class="semi-bold">Result will be copied to the clipboard.</div>
-            <button class="calculate-btn" id="css-lock--calculate">Calculate</button>
         </fieldset>
+
+        <fieldset class="css-unlock">
+            <legend>CSS-Unlock</legend>
+            <div class="semi-bold">Paste your code here:</div>
+            <textarea id="css-unlock-input" class="css-unlock-input"></textarea>
+        </fieldset>
+
+        <fieldset class="hex-to-rgb">
+            <legend>HEX to RGB</legend>
+            <div class="container">
+                <input type="text" id="hex-to-rgb-input" placeholder="HEX">
+                <input type="text" id="hex-to-rgb-opacity-input" placeholder="Opacity">
+                <button type="button" title="Clear" id="hex-to-rgb-clear-button">Clear</button>
+                <span id="hex-to-rgb-output">&nbsp;</span>
+            </div>
+
+        </fieldset>
+        <div class="semi-bold bottom-label">Result will be copied to the clipboard.</div>
     </main>
-    <script type="text/javascript" src="js/bundle.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
 </body>
 </html>
