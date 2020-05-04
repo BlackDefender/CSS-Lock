@@ -175,11 +175,12 @@ function cssLockInit() {
 const cssUnlockInit = () => {
     const input = document.getElementById('css-unlock-input');
     const unlock = () => {
-        const lockRegExp = /calc\(\-*\d+px \+ \(\-*\d+ - (\-*\d+)\) \* \(100vw \- \d+px\) \/ \(\d+ \- \d+\)\)/ig;
-        const lockEquationRegExp = /calc\((\-*\d+)(px|%) (\+*\-*) \(\-*\d+px \+ \(\-*\d+ - (\-*\d+)\) \* \(100vw \- \d+px\) \/ \(\d+ \- \d+\)\)\)/ig;
+        const point = document.querySelector('input[name="unlock-to-value"]:checked').value;
+        const lockRegExp = /calc\(\-*\d+px \+ \((\-*\d+) - (\-*\d+)\) \* \(100vw \- \d+px\) \/ \(\d+ \- \d+\)\)/ig;
+        const lockEquationRegExp = /calc\((\-*\d+)(px|%) (\+*\-*) \(\-*\d+px \+ \((\-*\d+) - (\-*\d+)\) \* \(100vw \- \d+px\) \/ \(\d+ \- \d+\)\)\)/ig;
         const multiStringParamRegExp = /:[^:;]+;/gm;
-        let result = input.value.replace(lockRegExp, '$1px')
-                                .replace(lockEquationRegExp, 'calc($1$2 $3 $4px)')
+        let result = input.value.replace(lockRegExp, point === 'start' ? '$1px' : '$2px')
+                                .replace(lockEquationRegExp, point === 'start' ? 'calc($1$2 $3 $4px)' : 'calc($1$2 $3 $5px)')
                                 .replace(multiStringParamRegExp, item => item.replace(/\s+/g, ' '))
                                 .replace(/~"/ig, '')
                                 .replace(/"/ig, '')
